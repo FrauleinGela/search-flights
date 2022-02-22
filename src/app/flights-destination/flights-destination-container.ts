@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import * as moment from 'moment';
 import { Moment } from 'moment';
-import { Observable, Subject, switchMap } from 'rxjs';
+import { catchError, Observable, of, Subject, switchMap } from 'rxjs';
 import { ISearchParametersUi } from './flights-destination.component';
 import { IFlightDestination } from './shared/models/flights-destination';
 import { IFlightsDestinationQueryParams, originCities, ViewBy } from './shared/models/server-params';
@@ -33,7 +33,7 @@ export class FlightsDestinationContainer implements OnInit {
 
   ngOnInit(): void {
     this.searchFlights$.pipe(switchMap(
-      (searchParameters) => this.getFlights(searchParameters))
+      (searchParameters) => this.getFlights(searchParameters).pipe(catchError(() => of([]))))
     ).subscribe((resp) => {
       if (resp && resp.length > 0) {
         this.flights = resp;
