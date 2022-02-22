@@ -1,0 +1,63 @@
+<div class="app-page">
+  <div class="app-form">
+    <mat-form-field class="app-form-control" appearance="fill" [formGroup]="form.controls['departureDate']">
+      <mat-label>Enter a date range</mat-label>
+      <mat-date-range-input [formGroup]="form.controls['departureDate']" [min]="searchViewDef.minDate"
+        [max]="searchViewDef.maxDate" [rangePicker]="picker">
+        <input matStartDate formControlName="startDate" placeholder="Start date">
+        <input matEndDate formControlName="endDate" placeholder="End date">
+      </mat-date-range-input>
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-date-range-picker #picker></mat-date-range-picker>
+      <mat-error *ngIf="form.controls['departureDate'].get('endDate')!.errors">
+        <p *ngIf="form.controls['departureDate'].controls['endDate']!.errors.matStartDateInvalid">
+          Invalid end date
+        </p>
+      </mat-error>
+      <mat-error *ngIf="form.controls['departureDate'].get('startDate')!.errors">
+        <p *ngIf="form.controls['departureDate'].controls['startDate']!.errors.required">
+          Select start date
+        </p>
+        <p *ngIf="form.controls['departureDate'].controls['startDate']!.errors.matStartDateInvalid">
+          Invalid start date
+        </p>
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field class="app-form-control" appearance="fill">
+      <mat-label>Origin</mat-label>
+      <mat-select [formControl]="form.controls['origin']" placeholder="Origin">
+        <mat-option *ngFor="let city of searchViewDef.originCities" [value]="city">{{city}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field class="app-form-control" appearance="fill">
+      <mat-label>View by</mat-label>
+      <mat-select [formControl]="form.controls['viewBy']">
+        <mat-option *ngFor="let viewByItem of searchViewDef.viewByList" [value]="viewByItem">{{viewByItem}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field class="app-form-control">
+      <input matInput type="number" placeholder="Max price" [formControl]="form.controls['maxPrice']"
+        autocomplete="off">
+    </mat-form-field>
+    <mat-checkbox class="app-form-checkbox-control" labelPosition="before" [formControl]="form.controls['oneWay']">One
+      way
+    </mat-checkbox>
+    <mat-checkbox class="app-form-checkbox-control" labelPosition="before" [formControl]="form.controls['nonStop']">Non
+      stop
+    </mat-checkbox>
+  </div>
+  <div>
+    {{resultStatus}}
+    <mat-card *ngFor="let flight of flights" class="example-card">
+      <mat-card-title-group>
+        <mat-card-title>{{flight.origin}} - {{flight.destination}}</mat-card-title>
+        <mat-card-subtitle>Price: {{flight.price}} EUR</mat-card-subtitle>
+      </mat-card-title-group>
+      <mat-card-content>
+        <p>Departure: {{flight.departureDate}}</p>
+
+        <p *ngIf="flight.returnDate">Return: {{flight.returnDate}}</p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

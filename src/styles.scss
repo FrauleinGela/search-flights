@@ -2,3 +2,19 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+.app-page {
+  padding: 1.5rem 1rem;
+}
+.app-form {
+  display: flex;
+  flex-direction: wrap;
+  .app-form-control {
+    width: 220px;
+    margin: 0 1.5rem 0 0;
+  }
+ .app-form-checkbox-control {
+  width: 100px;
+  margin: 0 1.5rem 0 0;
+ }
+  }
+
