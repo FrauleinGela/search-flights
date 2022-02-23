@@ -2,6 +2,7 @@ export enum ViewBy { DESTINATION = 'DESTINATION', DURATION = 'DURATION', WEEK = 
 }
 export const originCities: string[] = [
   'MAD',
+  'LON'
 ]
 export interface IFlightsDestinationQueryParams {
   origin: string;
