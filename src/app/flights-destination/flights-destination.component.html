@@ -47,7 +47,8 @@
     </mat-checkbox>
   </div>
   <div>
-    {{resultStatus}}
+    <mat-progress-bar mode="indeterminate" *ngIf="showProgress"></mat-progress-bar>
+    <p>{{resultStatus}}</p>
     <mat-card *ngFor="let flight of flights" class="example-card">
       <mat-card-title-group>
         <mat-card-title>{{flight.origin}} - {{flight.destination}}</mat-card-title>

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import * as moment from 'moment';
 import { Moment } from 'moment';
-import { catchError, Observable, of, Subject, switchMap } from 'rxjs';
+import { catchError, finalize, Observable, of, Subject, switchMap } from 'rxjs';
 import { ISearchParametersUi } from './flights-destination.component';
 import { IFlightDestination } from './shared/models/flights-destination';
 import { IFlightsDestinationQueryParams, originCities, ViewBy } from './shared/models/server-params';
@@ -14,6 +14,7 @@ import { FlightsDestinationService } from './shared/services/flights-destination
   [searchViewDef]="searchViewDef" 
   (onNewSearched)="newSearch($event)"
   [resultStatus]="resultStatus"
+  [showProgress]="showProgress$ | async"
   ></app-flights-destination>`
 })
 export class FlightsDestinationContainer implements OnInit {
@@ -27,13 +28,19 @@ export class FlightsDestinationContainer implements OnInit {
   flights: IFlightDestination[] = [];
   resultStatus: string = '';
   searchFlights$ = new Subject<IFlightsDestinationQueryParams>();
+  showProgress$: Subject<boolean> = new Subject();
   constructor(private flightsService: FlightsDestinationService) {
 
   }
 
   ngOnInit(): void {
     this.searchFlights$.pipe(switchMap(
-      (searchParameters) => this.getFlights(searchParameters).pipe(catchError(() => of([]))))
+      (searchParameters) => {
+        this.showProgress$.next(true)
+        return this.getFlights(searchParameters).pipe(
+          catchError(() => of([])),
+          finalize(() => this.showProgress$.next(false)))
+      })
     ).subscribe((resp) => {
       if (resp && resp.length > 0) {
         this.flights = resp;

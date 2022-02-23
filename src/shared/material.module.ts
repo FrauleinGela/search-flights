@@ -7,8 +7,10 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatRippleModule } from "@angular/material/core";
 import { MomentDateModule } from '@angular/material-moment-adapter';
 import { MAT_DATE_FORMATS } from '@angular/material/core';
-import {MatCardModule} from '@angular/material/card';
-import {MatSelectModule} from '@angular/material/select';
+import { MatCardModule } from '@angular/material/card';
+import { MatSelectModule } from '@angular/material/select';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+
 const modules = [
   MatButtonModule,
   MatFormFieldModule,
@@ -19,7 +21,8 @@ const modules = [
   MatDatepickerModule,
   MomentDateModule,
   MatSelectModule,
-  MatCardModule
+  MatCardModule,
+  MatProgressBarModule
 ];
 
 @NgModule({

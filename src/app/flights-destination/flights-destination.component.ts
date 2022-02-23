@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import * as moment from 'moment';
 import { ViewBy } from './shared/models/server-params';
 import { Moment } from 'moment';
@@ -29,6 +29,7 @@ export class FlightsDestinationComponent {
     viewByList: string[],
     originCities: string[]
   } = { minDate: moment(), maxDate: moment(), viewByList: [], originCities: [] };
+  @Input() showProgress: boolean = false;
   constructor(private presenter: FlightsDestinationPresenter) { }
   ngOnInit(): void {
     this.presenter.search$.subscribe((formValues) => this.onNewSearched.emit(formValues));
