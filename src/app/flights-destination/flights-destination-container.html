@@ -1,15 +1,17 @@
-<app-search-filter (onNewSearched)="newSearch($event)" [searchViewDef]="searchViewDef"></app-search-filter>
-<mat-progress-bar mode="indeterminate" *ngIf="showProgress$ | async"></mat-progress-bar>
-<p *ngIf="originFieldName">What are the cheapest places to fly from
-  {{originFieldName}}?</p>
-<p>{{resultStatus}}</p>
-<mat-card *ngFor="let flight of flights" class="example-card">
-  <mat-card-title-group>
-    <mat-card-title>{{flight.origin}} - {{flight.destination}}</mat-card-title>
-    <mat-card-subtitle>Price: {{flight.price}} EUR</mat-card-subtitle>
-  </mat-card-title-group>
-  <mat-card-content>
-    <p>Departure: {{flight.departureDate}}</p>
-    <p *ngIf="flight.returnDate">Return: {{flight.returnDate}}</p>
-  </mat-card-content>
-</mat-card>
+<div class="app-page">
+  <app-search-filter (onNewSearched)="newSearch($event)" [searchViewDef]="searchViewDef"></app-search-filter>
+  <p *ngIf="originFieldName">What are the cheapest places to fly from
+    {{originFieldName}}?</p>
+  <mat-progress-bar mode="indeterminate" *ngIf="showProgress$ | async"></mat-progress-bar>
+  <p>{{resultStatus}}</p>
+  <mat-card *ngFor="let flight of flights" class="example-card">
+    <mat-card-title-group>
+      <mat-card-title>{{flight.origin}} - {{flight.destination}}</mat-card-title>
+      <mat-card-subtitle>Price: {{flight.price}} EUR</mat-card-subtitle>
+    </mat-card-title-group>
+    <mat-card-content>
+      <p>Departure: {{flight.departureDate}}</p>
+      <p *ngIf="flight.returnDate">Return: {{flight.returnDate}}</p>
+    </mat-card-content>
+  </mat-card>
+</div>

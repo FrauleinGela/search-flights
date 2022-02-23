@@ -7,10 +7,13 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 }
 .app-form {
   display: flex;
-  flex-direction: wrap;
+  flex-wrap: wrap;
   .app-form-control {
     width: 220px;
     margin: 0 1.5rem 0 0;
+    &.mat-form-field-type-mat-input{
+      line-height: 1.85;
+    }
   }
  .app-form-checkbox-control {
   width: 100px;
