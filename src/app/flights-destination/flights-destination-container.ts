@@ -1,24 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import * as moment from 'moment';
 import { Moment } from 'moment';
-import { catchError, finalize, Observable, of, Subject, switchMap } from 'rxjs';
-import { ISearchParametersUi } from './flights-destination.component';
+import { catchError, finalize, Observable, of, Subject, switchMap, takeUntil } from 'rxjs';
+import { ISearchParametersUi } from './shared/components/search-filter/search-filter.component';
 import { IFlightDestination } from './shared/models/flights-destination';
 import { IFlightsDestinationQueryParams, originCities, ViewBy } from './shared/models/server-params';
 import { FlightsDestinationService } from './shared/services/flights-destination.service';
 
 @Component({
   selector: 'app-flights-destination-container',
-  template: `<app-flights-destination 
-  [flights]="flights" 
-  [searchViewDef]="searchViewDef" 
-  (onNewSearched)="newSearch($event)"
-  [resultStatus]="resultStatus"
-  [showProgress]="showProgress$ | async"
-  ></app-flights-destination>`
+  templateUrl: './flights-destination-container.html'
 })
-export class FlightsDestinationContainer implements OnInit {
-
+export class FlightsDestinationContainer implements OnInit, OnDestroy {
+  originFieldName: string = '';
   searchViewDef = {
     minDate: moment(),
     maxDate: moment().add(180, 'days'),
@@ -29,9 +23,8 @@ export class FlightsDestinationContainer implements OnInit {
   resultStatus: string = '';
   searchFlights$ = new Subject<IFlightsDestinationQueryParams>();
   showProgress$: Subject<boolean> = new Subject();
-  constructor(private flightsService: FlightsDestinationService) {
-
-  }
+  destroy$ = new Subject<void>();
+  constructor(private flightsService: FlightsDestinationService) { }
 
   ngOnInit(): void {
     this.searchFlights$.pipe(switchMap(
@@ -40,7 +33,8 @@ export class FlightsDestinationContainer implements OnInit {
         return this.getFlights(searchParameters).pipe(
           catchError(() => of([])),
           finalize(() => this.showProgress$.next(false)))
-      })
+      }),
+      takeUntil(this.destroy$)
     ).subscribe((resp) => {
       if (resp && resp.length > 0) {
         this.flights = resp;
@@ -52,6 +46,7 @@ export class FlightsDestinationContainer implements OnInit {
     });
   }
   newSearch(searchParameters: ISearchParametersUi) {
+    this.originFieldName = searchParameters.origin;
     this.searchFlights$.next(this.getRequestQueryParams(searchParameters));
   }
 
@@ -65,15 +60,20 @@ export class FlightsDestinationContainer implements OnInit {
       nonStop: searchParameters.nonStop,
       origin: searchParameters.origin,
       oneWay: searchParameters.oneWay,
-      departureDate: this.getRangeOfDates(searchParameters.startDate, searchParameters.endDate),
+      departureDate: this.getDepartureDateQueryParam(searchParameters.startDate, searchParameters.endDate),
       maxPrice: searchParameters.maxPrice
     }
   }
 
-  getRangeOfDates(startDate: Moment, endDate: Moment): string {
+  getDepartureDateQueryParam(startDate: Moment, endDate: Moment): string {
     if (endDate) {
       return `${startDate.format('YYYY-MM-DD')},${endDate.format('YYYY-MM-DD')}`;
     }
     return `${startDate.format('YYYY-MM-DD')}`;
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
