@@ -16,8 +16,6 @@ A clear picture of how Angular app and Amadeus API authentication is connected.
 * We may also see that SearchFilter Component is a presentational component, though at the same time it carries a Presenter Service. 
 * Presenter service deals with all necessary validations regarding Form fields. For example: If a form is valid, then emit changes to outer components to do what it's necessary.
 
-## Image of how the view Flights destination looks
-![image](https://user-images.githubusercontent.com/7724026/155360985-1e7ec5c5-c437-4939-ac4e-4e6dd52d40f9.png)
 
 ## Issues I found during development while getting data from Amadeus
 - API returns 500 status code error when chosen other origin countries - FIXED: I kept only MAD and LON as the only available origins.
